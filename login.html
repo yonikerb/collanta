@@ -1,66 +1,78 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>התחברות - פורטל סוכנים</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        sap: {
-                            blue: '#0070F2',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-    <div class="w-full max-w-sm">
-        <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-sap-blue rounded-3xl mx-auto flex items-center justify-center shadow-lg mb-4">
-                <span class="text-white font-bold text-2xl">B1</span>
-            </div>
-            <h2 class="text-2xl font-bold text-gray-800">שלום שוב!</h2>
-            <p class="text-gray-500 text-sm mt-1">התחבר כדי לנהל את המכירות שלך</p>
-        </div>
+const LoginPage = () => {
+  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-        <form id="loginForm" class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-4">
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      // כאן אנחנו פונים לפרוקסי שלנו
+      const response = await fetch('/api/proxy/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error('שם משתמש או סיסמה שגויים');
+
+      // במקרה של הצלחה, הפרוקסי יחזיר Session או Token
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">מערכת ניהול סוכנים</h2>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <form className="space-y-6" onSubmit={handleLogin}>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">שם משתמש</label>
-                <input type="text" id="username" required 
-                    class="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-sap-blue focus:border-transparent outline-none transition">
+              <label className="block text-sm font-medium text-gray-700">שם משתמש</label>
+              <input
+                type="text"
+                required
+                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) => setFormData({...formData, username: e.target.value})}
+              />
             </div>
-            
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">סיסמה</label>
-                <input type="password" id="password" required 
-                    class="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-sap-blue focus:border-transparent outline-none transition">
+              <label className="block text-sm font-medium text-gray-700">סיסמה</label>
+              <input
+                type="password"
+                required
+                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+              />
             </div>
 
-            <button type="submit" 
-                class="w-full bg-sap-blue text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition active:scale-95">
-                התחבר למערכת
+            {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+            <button
+              disabled={loading}
+              type="submit"
+              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              {loading ? 'מתחבר...' : 'התחבר למערכת'}
             </button>
-        </form>
+          </form>
+        </div>
+      </div>
     </div>
+  );
+};
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // כאן בהמשך נחבר את הקריאה ל-Backend (Node.js)
-            // נכון לעכשיו, הוא פשוט מעביר את הסוכן לדף הבית
-            console.log("מבצע התחברות...");
-            
-            // הדמיית התחברות מוצלחת
-            window.location.href = 'index.html'; 
-        });
-    </script>
-</body>
-</html>
+export default LoginPage;
