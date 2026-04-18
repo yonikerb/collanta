@@ -3,80 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>פורטל סוכנים - SAP B1</title>
+    <title>פורטל סוכנים</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gray-50 min-h-screen pb-20">
 
-    <header class="p-6 bg-white shadow-sm">
-        <h1 class="text-2xl font-bold text-gray-800">שלום יונתן</h1>
-        <p class="text-gray-500">מערכת ניהול מכירות - SAP Business One</p>
+    <header class="p-6 bg-white shadow-sm flex justify-between items-center">
+        <h1 class="text-xl font-bold">שלום יונתן</h1>
+        <button onclick="window.location.href='login.html'" class="text-red-500 text-sm">יציאה</button>
     </header>
 
-    <main class="p-4 pb-24 space-y-6">
-        
-        <section class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-            <div class="flex items-center gap-2 mb-4">
-                <i data-lucide="trending-up" class="text-blue-600"></i>
-                <h2 class="font-bold text-gray-700">ביצועים חודשיים</h2>
-            </div>
-            <div id="sales-amount" class="text-4xl font-extrabold text-gray-900">₪ 0</div>
-            <div class="w-full bg-gray-100 h-3 rounded-full mt-4 overflow-hidden">
-                <div id="progress-bar" class="bg-blue-600 h-3 rounded-full" style="width: 0%"></div>
-            </div>
+    <main class="p-4 space-y-6">
+        <section class="bg-white p-6 rounded-3xl shadow-sm">
+            <h2 class="font-bold text-gray-700 mb-2">סיכום מכירות חודשי</h2>
+            <div class="text-4xl font-extrabold text-blue-600">₪ 42,500</div>
         </section>
-
-        <div class="grid grid-cols-2 gap-4">
-            <button class="flex flex-col items-center justify-center p-6 bg-blue-600 text-white rounded-3xl shadow-lg hover:bg-blue-700 transition-all">
-                <i data-lucide="plus-circle" size="32"></i>
-                <span class="mt-2 font-semibold">הזמנה חדשה</span>
-            </button>
-            <button class="flex flex-col items-center justify-center p-6 bg-white text-gray-700 rounded-3xl border border-gray-200 shadow-sm hover:border-blue-500 transition-all">
-                <i data-lucide="user-plus" size="32"></i>
-                <span class="mt-2 font-semibold">לקוחות</span>
-            </button>
-        </div>
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200 px-6 py-3 flex justify-between items-center z-50">
-        <a href="index.html" class="text-blue-600 flex flex-col items-center">
-            <i data-lucide="layout-dashboard"></i>
-            <span class="text-[10px] mt-1">בית</span>
-        </a>
-        <a href="orders.html" class="text-gray-400 flex flex-col items-center">
-            <i data-lucide="file-text"></i>
-            <span class="text-[10px] mt-1">הזמנות</span>
-        </a>
-        <a href="search.html" class="text-gray-400 flex flex-col items-center">
-            <i data-lucide="search"></i>
-            <span class="text-[10px] mt-1">חיפוש</span>
-        </a>
+    <nav class="fixed bottom-0 w-full bg-white border-t p-4 flex justify-around">
+        <i data-lucide="layout-dashboard" class="text-blue-600"></i>
+        <i data-lucide="file-text" class="text-gray-400"></i>
+        <i data-lucide="search" class="text-gray-400"></i>
     </nav>
 
     <script>
-        // הפעלת האייקונים
         lucide.createIcons();
-
-        // הדמיית קריאה ל-API שלך שמחובר ל-SAP
-        async function fetchSalesData() {
-            try {
-                // כאן תכניס את ה-Endpoint של ה-Backend שלך
-                // const response = await fetch('/api/sales-summary');
-                // const data = await response.json();
-                
-                // נתונים לדוגמה
-                const data = { totalSales: 42500, target: 60000 };
-                
-                document.getElementById('sales-amount').innerText = '₪ ' + data.totalSales.toLocaleString();
-                const progress = (data.totalSales / data.target) * 100;
-                document.getElementById('progress-bar').style.width = progress + '%';
-            } catch (err) {
-                console.error("שגיאה במשיכת נתונים מ-SAP", err);
-            }
-        }
-
-        fetchSalesData();
     </script>
 </body>
 </html>
