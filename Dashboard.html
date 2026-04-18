@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <div class="flex">
+        <nav class="w-64 bg-blue-900 min-h-screen text-white p-6">
+            <h1 class="text-2xl font-bold mb-10">מערכת סוכנים</h1>
+            <ul class="space-y-4">
+                <li><a href="dashboard.html" class="block p-2 bg-blue-800 rounded">לוח בקרה</a></li>
+                <li><a href="customers.html" class="block p-2 hover:bg-blue-800 rounded">ניהול חנויות וחובות</a></li>
+                <li><a href="catalog.html" class="block p-2 hover:bg-blue-800 rounded">קטלוג והזמנות</a></li>
+                <li><a href="cart.html" class="block p-2 hover:bg-blue-800 rounded">עגלת קניות</a></li>
+                <li><a href="orders.html" class="block p-2 hover:bg-blue-800 rounded">היסטוריית הזמנות</a></li>
+            </ul>
+        </nav>
+
+        <main class="flex-1 p-8">
+            <h2 class="text-3xl font-bold mb-8">לוח בקרה - תמונת מצב</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded shadow border-r-4 border-blue-600">
+                    <h3 class="text-gray-500">הזמנות פתוחות</h3>
+                    <p id="open-orders" class="text-4xl font-bold">...</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow border-r-4 border-red-500">
+                    <h3 class="text-gray-500">חובות דחופים</h3>
+                    <p id="urgent-debts" class="text-4xl font-bold">...</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow border-r-4 border-green-500">
+                    <h3 class="text-gray-500">מכירות היום</h3>
+                    <p id="daily-sales" class="text-4xl font-bold">...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // חיבור לפרוקסי: משיכת הנתונים לדשבורד
+        async function loadDashboardData() {
+            try {
+                // אנחנו פונים לפרוקסי שלנו שמבצע GET מול ה-Service Layer
+                const response = await fetch('/api/proxy/dashboard-stats');
+                const data = await response.json();
+
+                // עדכון הנתונים ב-UI
+                document.getElementById('open-orders').innerText = data.openOrders;
+                document.getElementById('urgent-debts').innerText = data.urgentDebts;
+                document.getElementById('daily-sales').innerText = data.dailySales;
+            } catch (err) {
+                console.error("שגיאה בטעינת נתוני הדשבורד מהפרוקסי:", err);
+                document.getElementById('open-orders').innerText = '0';
+            }
+        }
+
+        // הרצת הפונקציה בטעינת הדף
+        window.onload = loadDashboardData;
+    </script>
+</body>
+</html>
